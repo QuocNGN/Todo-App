@@ -1,16 +1,16 @@
-const taskInput = document.querySelector('.task-input input');
-const taskBox = document.querySelector('.task-box');
-const selectFilters = document.querySelector('.filter select');
-const emptyImage = document.querySelector('.empty-image');
-const addButton = document.querySelector('.add-button');
-const resetButton = document.querySelector('.reset-button');
+const taskInput = document.querySelector(".task-input input");
+const taskBox = document.querySelector(".task-box");
+const selectFilters = document.querySelector(".filter select");
+const emptyImage = document.querySelector(".empty-image");
+const addButton = document.querySelector(".add-button");
+const resetButton = document.querySelector(".reset-button");
 
 let editId;
 let isEditedTask = false;
-let todos = JSON.parse(localStorage.getItem('todo-list')) || [];
-let currentFilter = 'all'; // Add this variable to store the current filter
+let todos = JSON.parse(localStorage.getItem("todo-list")) || [];
+let currentFilter = "all"; // Add this variable to store the current filter
 
-selectFilters.addEventListener('change', (event) => {
+selectFilters.addEventListener("change", (event) => {
   const selected = event.target.value;
   currentFilter = selected;
   showTodo();
@@ -24,42 +24,42 @@ function handleAddTask() {
       if (!todos) {
         todos = [];
       }
-      let taskInfo = { name: userTask, status: 'pending' };
+      let taskInfo = { name: userTask, status: "pending" };
       todos.push(taskInfo);
     } else {
       isEditedTask = false;
       todos[editId].name = userTask;
-      addButton.textContent = 'Add'; // Change the content of the "Save" button to "Add"
+      addButton.textContent = "Add"; // Change the content of the "Save" button to "Add"
     }
-    taskInput.value = '';
+    taskInput.value = "";
     // let taskInfo = { name: userTask, status: 'pending' };
     // todos.push(taskInfo);
-    localStorage.setItem('todo-list', JSON.stringify(todos));
+    localStorage.setItem("todo-list", JSON.stringify(todos));
     showTodo();
   }
 }
 
-addButton.addEventListener('click', handleAddTask);
+addButton.addEventListener("click", handleAddTask);
 
-taskInput.addEventListener('keyup', (e) => {
-  if (e.key == 'Enter') {
+taskInput.addEventListener("keyup", (e) => {
+  if (e.key == "Enter") {
     handleAddTask();
   }
 });
 
-resetButton.addEventListener('click', () => {
-  taskInput.value = '';
+resetButton.addEventListener("click", () => {
+  taskInput.value = "";
   isEditedTask = false; // When Cancel is pressed, reset isEditedTask to false
-  addButton.textContent = 'Add'; // Change the content of the "Save" button to "Add".
+  addButton.textContent = "Add"; // Change the content of the "Save" button to "Add".
 });
 
 function showTodo() {
-  let li = '';
+  let li = "";
   if (todos.length > 0) {
     todos.forEach((todo, id) => {
       //if todo status is completed, set the isCompleted value to checked
-      let isCompleted = todo.status == 'completed' ? 'checked' : '';
-      if (currentFilter == todo.status || currentFilter == 'all') {
+      let isCompleted = todo.status == "completed" ? "checked" : "";
+      if (currentFilter == todo.status || currentFilter == "all") {
         li += ` <li class="task">
                       <label for="${id}">
                           <input type="checkbox" id="${id}" onclick="updateStatus(this)" ${isCompleted}>
@@ -77,3 +77,11 @@ function showTodo() {
     `<img src="asset/no-task.png" alt="" class="empty-image" width="150">`;
 }
 showTodo();
+
+function deleteTask(deleteId) {
+  // removing selected task from array/todos
+  isEditedTask = false;
+  todos.splice(deleteId, 1);
+  localStorage.setItem("todo-list", JSON.stringify(todos));
+  showTodo(); // Show the list again after deleting the job
+}
